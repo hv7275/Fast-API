@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, HTTPException
 
 app = FastAPI()
 
@@ -59,3 +59,27 @@ async def update_book(updated_book = Body()):
     for i in range(len(BOOKS)):
         if BOOKS[i].get('title').casefold() == updated_book.get('title').casefold():
             BOOKS[i] = updated_book
+            
+
+@app.delete('/books/delete_books/{book_title}')
+async def delete_book(book_title: str):
+    """Delete a book by title (case-insensitive).
+
+    Returns the deleted book on success, or raises 404 if not found.
+    """
+    for i, book in enumerate(BOOKS):
+        if book.get('title').casefold() == book_title.casefold():
+            removed = BOOKS.pop(i)
+            return {"deleted": removed}
+    # not found
+    raise HTTPException(status_code=404, detail="Book not found")
+
+
+@app.get('/books/author/{author}')
+async def read_book_author(author: str):
+    books_to_return = []
+    for book in BOOKS:
+        if book.get('author').casefold() == author.casefold():
+            books_to_return.append(book)
+            
+    return books_to_return
