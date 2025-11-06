@@ -1,15 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 
 app = FastAPI()
 
 
 BOOKS = [
-    {'title':'Title one', 'author':'Authur one', 'category':'Science'},
+    {'title':'Title one', 'author':'Authur One', 'category':'Science'},
     {'title':'Title Two', 'author':'Authur Two', 'category':'Science'},
     {'title':'Title Three', 'author':'Authur Three', 'category':'History'},
-    {'title':'Title Four', 'author':'Authur Fout', 'category':'Math'},
+    {'title':'Title Four', 'author':'Authur Four', 'category':'Math'},
     {'title':'Title Five', 'author':'Authur Five', 'category':'Math'},
     {'title':'Title Six', 'author':'Authur Two', 'category':'Math'},
+    {"title":"Title Seven", "author":"Authur One", "category":"Science"}
 ]
 
 @app.get('/books')
@@ -46,3 +47,9 @@ async def read_author_category(author: str, category: str):
         book.get('category').casefold() == category.casefold():
             books_to_return.append(book)
     return books_to_return
+
+
+@app.post('/books/create_book')
+async def create_book(new_book = Body()):
+    BOOKS.append(new_book)
+    
