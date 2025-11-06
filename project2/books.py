@@ -32,3 +32,10 @@ async def reload_all_books():
 
 
 
+@app.post('/create-book')
+async def create_book(book_request = Body()):
+    BOOKS.append(book_request)
+    
+    
+    
+    
